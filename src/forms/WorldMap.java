@@ -2,6 +2,9 @@ package forms;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
 import javax.swing.JPanel;
 
@@ -16,7 +19,41 @@ public class WorldMap extends JPanel {
 	private static final long serialVersionUID = -1228684010205095669L;
 
 	public WorldMap() {
-		// TODO Auto-generated constructor stub
+		this.addMouseListener(new MouseListener() {
+			@Override
+			public void mouseReleased(MouseEvent e) {}
+			@Override
+			public void mousePressed(MouseEvent e) {
+				replaceTerrain(e.getX() / SPRITE_SIZE, e.getY() / SPRITE_SIZE);
+				repaint();
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {}
+			@Override
+			public void mouseEntered(MouseEvent e) {}
+			@Override
+			public void mouseClicked(MouseEvent e) {} 
+		});
+		
+		this.addMouseMotionListener(new MouseMotionListener() {
+			
+			@Override
+			public void mouseMoved(MouseEvent e) {}
+			
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				if ((e.getX() > 0) && (e.getY() > 0) && (e.getX() < SPRITE_SIZE * World.getInstance().getSizeX()) && (e.getY() < SPRITE_SIZE * World.getInstance().getSizeY())) {
+					if (World.getInstance().getTerrain(e.getX() / SPRITE_SIZE, e.getY() / SPRITE_SIZE) instanceof SeaTerrain) {
+						replaceTerrain(e.getX() / SPRITE_SIZE, e.getY() / SPRITE_SIZE);
+						repaint();
+					}
+				}
+			}
+		});
+	}
+	
+	private void replaceTerrain(int x, int y) {
+		World.getInstance().setTerrain(x, y, new LandTerrain());
 	}
 	
 	@Override
