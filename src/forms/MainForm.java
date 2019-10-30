@@ -27,13 +27,13 @@ public class MainForm extends JFrame {
 	
 	private void buildBaseForm() {
 		TopPanel = new JPanel();
-		TopPanel.setBackground(Color.blue);
+		TopPanel.setBackground(Color.gray);
 		
 		SidePanel = new JPanel();
 		SidePanel.setPreferredSize(new Dimension(200, 0));
 		SidePanel.setBackground(Color.yellow);
 		
-		MainPanel = new JPanel();
+		MainPanel = new WorldMap();
 		MainPanel.setBackground(Color.green);
 		
 		getContentPane().add(TopPanel, BorderLayout.NORTH);
