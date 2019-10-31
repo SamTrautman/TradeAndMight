@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -16,9 +17,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
 import core.World;
-import core.terrain.LandTerrain;
-import core.terrain.MountainTerrain;
-import core.terrain.SeaTerrain;
+import core.WorldImExporter;
+import core.terrain.TerrainType;
 
 public class MainForm extends JFrame implements ActionListener {
 	
@@ -54,10 +54,17 @@ public class MainForm extends JFrame implements ActionListener {
 			}
 		}
 		else if (e.getActionCommand().equals("SaveMap")) {
-			
+			JFileChooser chooser = new JFileChooser();
+			if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+				WorldImExporter.getInstance().saveWorldToFile(chooser.getSelectedFile().getAbsolutePath());
+			}
 		}
 		else if (e.getActionCommand().equals("LoadMap")) {
-			
+			JFileChooser chooser = new JFileChooser();
+			if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+				WorldImExporter.getInstance().loadWorldFromFile(chooser.getSelectedFile().getAbsolutePath());
+				repaint();
+			}
 		}
 		else if (e.getActionCommand().equals("Close")) {
 			dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
@@ -70,14 +77,14 @@ public class MainForm extends JFrame implements ActionListener {
 	}
 	
 	public void editTile(int X, int Y) {
-		if ((EdtTerrainFrame.rbSea.isSelected()) && !(World.getInstance().getTerrain(X, Y) instanceof SeaTerrain)) {
-			World.getInstance().setTerrain(X, Y, new SeaTerrain());
+		if ((EdtTerrainFrame.rbSea.isSelected()) && !(World.getInstance().getTerrain(X, Y).getTerrainType() == TerrainType.TERRAIN_SEA)) {
+			World.getInstance().setTerrain(X, Y, TerrainType.TERRAIN_SEA);
 		}
-		else if ((EdtTerrainFrame.rbLand.isSelected()) && !(World.getInstance().getTerrain(X, Y) instanceof LandTerrain)) {
-			World.getInstance().setTerrain(X, Y, new LandTerrain());
+		else if ((EdtTerrainFrame.rbLand.isSelected()) && !(World.getInstance().getTerrain(X, Y).getTerrainType() == TerrainType.TERRAIN_LAND)) {
+			World.getInstance().setTerrain(X, Y, TerrainType.TERRAIN_LAND);
 		}
-		else if ((EdtTerrainFrame.rbMountain.isSelected()) && !(World.getInstance().getTerrain(X, Y) instanceof MountainTerrain)) {
-			World.getInstance().setTerrain(X, Y, new MountainTerrain());
+		else if ((EdtTerrainFrame.rbMountain.isSelected()) && !(World.getInstance().getTerrain(X, Y).getTerrainType() == TerrainType.TERRAIN_MOUNTAIN)) {
+			World.getInstance().setTerrain(X, Y, TerrainType.TERRAIN_MOUNTAIN);
 		}
 	}
 	

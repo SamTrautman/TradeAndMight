@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import core.terrain.ITerrain;
+import core.terrain.LandTerrain;
+import core.terrain.MountainTerrain;
 import core.terrain.SeaTerrain;
+import core.terrain.TerrainType;
 
 public class World implements IWorld{
 	
@@ -45,8 +48,17 @@ public class World implements IWorld{
 		return TerrainMap.get(PosX).get(PosY);
 	}
 	
-	public void setTerrain(int PosX, int PosY, ITerrain Terrain) {
-		TerrainMap.get(PosX).set(PosY, Terrain);
+	public void setTerrain(int PosX, int PosY, TerrainType Type) {
+		
+		if (Type == TerrainType.TERRAIN_SEA) {
+			TerrainMap.get(PosX).set(PosY, new SeaTerrain());
+		}
+		else if (Type == TerrainType.TERRAIN_LAND) {
+			TerrainMap.get(PosX).set(PosY, new LandTerrain());
+		}
+		else if (Type == TerrainType.TERRAIN_MOUNTAIN) {
+			TerrainMap.get(PosX).set(PosY, new MountainTerrain());
+		}
 	}
 
 	@Override
