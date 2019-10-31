@@ -24,8 +24,10 @@ public class WorldMap extends JPanel {
 			public void mouseReleased(MouseEvent e) {}
 			@Override
 			public void mousePressed(MouseEvent e) {
-				replaceTerrain(e.getX() / SPRITE_SIZE, e.getY() / SPRITE_SIZE);
-				repaint();
+				if ((e.getX() < SPRITE_SIZE * World.getInstance().getSizeX()) && (e.getY() < SPRITE_SIZE * World.getInstance().getSizeY())) {
+					replaceTerrain(e.getX() / SPRITE_SIZE, e.getY() / SPRITE_SIZE);
+					repaint();
+				}
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {}
