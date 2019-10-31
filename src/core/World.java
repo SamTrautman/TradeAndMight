@@ -27,6 +27,8 @@ public class World implements IWorld{
 	}
 	
 	public void createNewWorld(int NewSizeX, int NewSizeY) {
+		TerrainMap.clear();
+		
 		SizeX = NewSizeX;
 		SizeY = NewSizeY;
 		
