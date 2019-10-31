@@ -20,6 +20,7 @@ public class EditTerrainFrame extends JPanel {
 		rbMountain = new JRadioButton("Berge");
 		
 		ButtonGroup grp = new ButtonGroup();
+		
 		grp.add(rbSea);
 		grp.add(rbLand);
 		grp.add(rbMountain);

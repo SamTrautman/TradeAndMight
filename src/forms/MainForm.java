@@ -16,8 +16,11 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
 import core.World;
+import core.terrain.LandTerrain;
+import core.terrain.MountainTerrain;
+import core.terrain.SeaTerrain;
 
-public class MainForm extends JFrame {
+public class MainForm extends JFrame implements ActionListener {
 	
 	private JMenuBar MainMenuBar;
 	private JPanel MainPanel;
@@ -37,8 +40,45 @@ public class MainForm extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
-	private void closeForm() {
-		dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getActionCommand().equals("NewWorld")) {
+			NewWorldDialog dlg = new NewWorldDialog();
+			dlg.setModalityType(ModalityType.APPLICATION_MODAL);
+			
+			dlg.setVisible(true);
+			
+			if (dlg.Result) {
+				World.getInstance().createNewWorld(Integer.parseInt(dlg.txtSizeX.getText()), Integer.parseInt(dlg.txtSizeY.getText()));
+				repaint();
+			}
+		}
+		else if (e.getActionCommand().equals("SaveMap")) {
+			
+		}
+		else if (e.getActionCommand().equals("LoadMap")) {
+			
+		}
+		else if (e.getActionCommand().equals("Close")) {
+			dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+		}
+		else if (e.getActionCommand().equals("EditTerrain")) {
+			SidePanel.removeAll();
+			SidePanel.add(EdtTerrainFrame, BorderLayout.CENTER);
+			revalidate();
+		}
+	}
+	
+	public void editTile(int X, int Y) {
+		if ((EdtTerrainFrame.rbSea.isSelected()) && !(World.getInstance().getTerrain(X, Y) instanceof SeaTerrain)) {
+			World.getInstance().setTerrain(X, Y, new SeaTerrain());
+		}
+		else if ((EdtTerrainFrame.rbLand.isSelected()) && !(World.getInstance().getTerrain(X, Y) instanceof LandTerrain)) {
+			World.getInstance().setTerrain(X, Y, new LandTerrain());
+		}
+		else if ((EdtTerrainFrame.rbMountain.isSelected()) && !(World.getInstance().getTerrain(X, Y) instanceof MountainTerrain)) {
+			World.getInstance().setTerrain(X, Y, new MountainTerrain());
+		}
 	}
 	
 	private void buildBaseForm() {
@@ -55,7 +95,7 @@ public class MainForm extends JFrame {
 		SidePanel.setPreferredSize(new Dimension(200, 0));
 		SidePanel.setBackground(Color.yellow);
 		
-		MainPanel = new WorldMap();
+		MainPanel = new WorldMap(this);
 		MainPanel.setBackground(Color.green);
 		
 		EdtTerrainFrame = new EditTerrainFrame();
@@ -72,50 +112,19 @@ public class MainForm extends JFrame {
 	
 	private void buildFileMenu() {
 		JMenuItem ItmNewWorld = new JMenuItem("Neue Welt");
-		ItmNewWorld.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				NewWorldDialog dlg = new NewWorldDialog();
-				dlg.setModalityType(ModalityType.APPLICATION_MODAL);
-				
-				dlg.setVisible(true);
-				
-				if (dlg.Result) {
-					World.getInstance().createNewWorld(Integer.parseInt(dlg.txtSizeX.getText()), Integer.parseInt(dlg.txtSizeY.getText()));
-					repaint();
-				}
-			}
-		});
-		
 		JMenuItem ItmSaveWorld = new JMenuItem("Speichern");
-		ItmSaveWorld.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
-		
 		JMenuItem ItmLoadWorld = new JMenuItem("Laden");
-		ItmLoadWorld.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
-		
 		JMenuItem ItmClose = new JMenuItem("Beenden");
-		ItmClose.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				closeForm();
-			}
-		});
+		
+		ItmNewWorld.setActionCommand("NewWorld");
+		ItmSaveWorld.setActionCommand("SaveMap");
+		ItmLoadWorld.setActionCommand("LoadMap");
+		ItmClose.setActionCommand("Close");
+		
+		ItmNewWorld.addActionListener(this);
+		ItmSaveWorld.addActionListener(this);
+		ItmLoadWorld.addActionListener(this);
+		ItmClose.addActionListener(this);
 		
 		JMenu MnuFile = new JMenu("Datei");
 		MnuFile.add(ItmNewWorld);
@@ -128,15 +137,8 @@ public class MainForm extends JFrame {
 	
 	private void buildEditMenu() {
 		JMenuItem ItmEditTerrain = new JMenuItem("Terrain");
-		ItmEditTerrain.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				SidePanel.removeAll();
-				SidePanel.add(EdtTerrainFrame, BorderLayout.CENTER);
-				revalidate();
-			}
-		});
+		ItmEditTerrain.setActionCommand("EditTerrain");
+		ItmEditTerrain.addActionListener(this);
 		
 		JMenu MnuEdit = new JMenu("Bearbeiten");
 		MnuEdit.add(ItmEditTerrain);

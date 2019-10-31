@@ -14,18 +14,21 @@ import core.terrain.SeaTerrain;
 
 public class WorldMap extends JPanel {
 	
+	private MainForm Parent;
 	private int SPRITE_SIZE = 16;
 
 	private static final long serialVersionUID = -1228684010205095669L;
 
-	public WorldMap() {
+	public WorldMap(MainForm p_Parent) {
+		Parent = p_Parent;
+		
 		this.addMouseListener(new MouseListener() {
 			@Override
 			public void mouseReleased(MouseEvent e) {}
 			@Override
 			public void mousePressed(MouseEvent e) {
 				if ((e.getX() < SPRITE_SIZE * World.getInstance().getSizeX()) && (e.getY() < SPRITE_SIZE * World.getInstance().getSizeY())) {
-					replaceTerrain(e.getX() / SPRITE_SIZE, e.getY() / SPRITE_SIZE);
+					Parent.editTile(e.getX() / SPRITE_SIZE, e.getY() / SPRITE_SIZE);
 					repaint();
 				}
 			}
@@ -45,17 +48,11 @@ public class WorldMap extends JPanel {
 			@Override
 			public void mouseDragged(MouseEvent e) {
 				if ((e.getX() > 0) && (e.getY() > 0) && (e.getX() < SPRITE_SIZE * World.getInstance().getSizeX()) && (e.getY() < SPRITE_SIZE * World.getInstance().getSizeY())) {
-					if (World.getInstance().getTerrain(e.getX() / SPRITE_SIZE, e.getY() / SPRITE_SIZE) instanceof SeaTerrain) {
-						replaceTerrain(e.getX() / SPRITE_SIZE, e.getY() / SPRITE_SIZE);
-						repaint();
-					}
+					Parent.editTile(e.getX() / SPRITE_SIZE, e.getY() / SPRITE_SIZE);
+					repaint();
 				}
 			}
 		});
-	}
-	
-	private void replaceTerrain(int x, int y) {
-		World.getInstance().setTerrain(x, y, new LandTerrain());
 	}
 	
 	@Override
